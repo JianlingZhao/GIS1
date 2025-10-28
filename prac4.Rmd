@@ -7,21 +7,6 @@ date: "2025-10-28"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
----
-title: "prac4"
-output: html_document
-date: "2025-10-21"
----
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 
 ## Impoprt data
@@ -35,6 +20,7 @@ gender_data <- read_csv("GII_data.csv")
 worldshp <- st_read("World_Countries_(Generalized)_9029012925078512962.geojson")
 
 ```
+
 ## Clean data
 ```{r}
 
@@ -79,6 +65,5 @@ interactive_plote <- ggplotly(
 )
 
 print(interactive_plote)
-  
 
 ```
