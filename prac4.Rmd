@@ -1,0 +1,84 @@
+---
+title: "prac4"
+output: html_document
+date: "2025-10-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+---
+title: "prac4"
+output: html_document
+date: "2025-10-21"
+---
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+## Impoprt data
+```{r}
+library(sf)
+library(tidyverse)
+library(janitor)
+
+gender_data <- read_csv("GII_data.csv") 
+
+worldshp <- st_read("World_Countries_(Generalized)_9029012925078512962.geojson")
+
+```
+## Clean data
+```{r}
+
+data2010 <- gender_data %>%
+  filter(gender_data$year == 2010) %>%
+  select(country, value_2010 = value)
+
+data2019 <- gender_data %>%
+  filter(gender_data$year == 2019) %>%
+  select(country, value_2019 = value)
+
+gender_widedata <- data2010 %>%
+  left_join(data2019, by = "country")
+  
+world_data <- worldshp %>%
+  clean_names() %>%
+  left_join(gender_widedata, by = "country") %>%
+  mutate(index_diff = value_2019 - value_2010, .after = value_2019)
+
+```
+
+## Plot
+```{r}
+library(ggplot2)
+library(plotly)
+#plot(world_data)
+plot1 <- ggplot()+
+  geom_sf(data = world_data,
+          mapping = aes(fill = index_diff),
+          color = "white",
+          size = 0.1
+          ) +
+  scale_fill_viridis_c(
+    option = "plasma",
+    name = "GII index diff 2010-2019",
+    na.value = "white"
+  ) 
+
+interactive_plote <- ggplotly(
+  plot1,
+  tooltip = "index_diff"
+)
+
+print(interactive_plote)
+  
+
+```
